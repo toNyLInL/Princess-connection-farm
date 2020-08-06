@@ -8,6 +8,7 @@ import adbutils
 import cv2
 import matplotlib.pyplot as plt
 import websocket
+import random
 
 # from core.Automator import Automator
 from pcr_config import debug, fast_screencut_timeout, fast_screencut_delay
@@ -48,6 +49,14 @@ class ReceiveFromMinicap:
                 try:
                     self.ws.run_forever(ping_interval=30, ping_timeout=10)
                 except Exception as e:
+                    self.ws.close()
+                    self.ws = websocket.WebSocketApp('ws://localhost:{}/minicap'.format(self.lport),
+                                         # 这三个回调函数见下面
+                                         on_message=self.on_message,
+                                         on_close=self.on_close,
+                                         on_error=self.on_error)
+                    time.sleep(1)
+                    print(e)
                     if debug:
                         print("run minicap", type(e), e)
 

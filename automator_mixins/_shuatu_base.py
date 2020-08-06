@@ -15,7 +15,7 @@ class ShuatuBaseMixin(ToolsMixin):
     def __init__(self):
         super().__init__()
         self.switch = 0
-        self.times = 3  # 总刷图次数
+        self.times = 8  # 总刷图次数
 
     def sw_init(self):
         self.switch = 0

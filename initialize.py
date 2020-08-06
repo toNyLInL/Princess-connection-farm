@@ -68,6 +68,7 @@ def runmain(params):
             pass
     finally:
         a.stop_th()
+        a.receive_minicap.stop_ws = 1
     # 退出当前账号，切换下一个
     queue.put(address)
 
