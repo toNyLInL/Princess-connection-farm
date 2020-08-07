@@ -38,8 +38,8 @@ def runmain(params):
         a.log.write_log("info", f"即将登陆： 用户名 {account}")  # 显然不需要输出密码啊喂！
         # a.log.server_bot("warning", f"即将登陆： 用户名 {account}")
 
-        a.start_th()  # 提前开启异步：截的图可以给login函数使用
-        a.start_async()
+        # a.start_th()  # 提前开启异步：截的图可以给login函数使用
+        # a.start_async()
         gevent.joinall([
             # 这里是协程初始化的一个实例
             gevent.spawn(a.login_auth, account, password),
@@ -68,7 +68,8 @@ def runmain(params):
             pass
     finally:
         a.stop_th()
-        a.receive_minicap.stop_ws = 1
+        a.receive_minicap.ws_stop = 1
+        a.receive_minicap.ws.close()
     # 退出当前账号，切换下一个
     queue.put(address)
 
@@ -179,6 +180,7 @@ def execute(continue_=False, max_retry=3):
             a.d.app_stop("com.bilibili.priconne")
             a.stop_th()
             a.receive_minicap.ws_stop = 1
+            a.receive_minicap.ws.close()
         # 退出adb
         os.system('cd adb & adb kill-server')
         pcr_log('admin').write_log(level='info', message='任务全部完成')

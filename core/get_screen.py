@@ -50,6 +50,8 @@ class ReceiveFromMinicap:
                 try:
                     self.ws.run_forever(ping_interval=30, ping_timeout=10)
                 except Exception as e:
+                    if self.ws_stop:
+                        return
                     self.ws.close()
                     self.ws = websocket.WebSocketApp('ws://localhost:{}/minicap'.format(self.lport),
                                          # 这三个回调函数见下面
@@ -57,7 +59,7 @@ class ReceiveFromMinicap:
                                          on_close=self.on_close,
                                          on_error=self.on_error)
                     time.sleep(1)
-                    print(e)
+                    # print(e)
                     if debug:
                         print("run minicap", type(e), e)
 
@@ -79,7 +81,8 @@ class ReceiveFromMinicap:
 
     # 错误回调函数
     def on_error(self, error):
-        print(error)
+        if debug:
+            print(error)
 
     # 关闭ws的回调函数
     def on_close(self):
