@@ -37,6 +37,7 @@ class ReceiveFromMinicap:
                                          on_error=self.on_error)
         self.receive_thread: Optional[threading.Thread] = None
         self.good_thread: Optional[threading.Thread] = None
+        self.ws_stop = 0
 
     def start(self):
         # 开启debug
@@ -45,7 +46,7 @@ class ReceiveFromMinicap:
             raise Exception("请先建立与device的连接！")
 
         def run():
-            while True:
+            while not self.ws_stop:
                 try:
                     self.ws.run_forever(ping_interval=30, ping_timeout=10)
                 except Exception as e:
